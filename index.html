@@ -1,99 +1,68 @@
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
     <title>TikTok上传时间查询 FromAMC</title>
+    <meta charset="UTF-8">
     <style>
-        body {
-            margin: 1em;
-            font-family: "Helvetica", Arial, sans-serif;
-            font-size: 18px;
-        }
-
-        button, input {
-            font-size: 16px;
-        }
-
-        .form {
-            margin-bottom: 1em;
-        }
+      body {
+        margin: 1em;
+        font-family: "Helvetica", Arial, sans-serif;
+        font-size: 18px;
+      }
+      button, input {
+          font-size: 16px;
+      }
+      .form {
+          margin-bottom: 1em;
+      }
     </style>
-</head>
-<body>
-<script>
-    function getVidId() {
-        const tiktokUrl = document.querySelector("#url").value;
-        const regex = /(?<=\/video\/)(.*?)(?=$|[^0-9])/;
-        const vidId = regex.exec(tiktokUrl)[0];
-        return vidId;
-    }
-
-    function extractUnixTimestamp(vidId) {
-        const asBinary = BigInt(vidId).toString(2);
-        const first31Chars = asBinary.slice(0, 31);
-        const timestamp = parseInt(first31Chars, 2);
-
-        // Convert Unix timestamp to JavaScript Date
-        const date = new Date(timestamp * 1000);  // Multiply by 1000 because JavaScript uses milliseconds
-
-        // Display the Beijing time
-        const options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'Asia/Shanghai'
-        };
-        const beijingTime = date.toLocaleDateString('zh-CN', options);
-        document.querySelector("#result").textContent = "北京时间: " + beijingTime;
-    }
-
-    function getVidId() {
-        const tiktokUrl = document.querySelector("#url").value;
+  </head>
+  <body>
+    <script>
+      function getVidId() {
+        const tiktokUrl= document.querySelector("#url").value;
         // This regex should be safe as "Only letters, numbers, underscores, or periods are allowed" in TikTok usernames.
         const regex = /(?<=\/video\/)(.*?)(?=$|[^0-9])/;
         const vidId = regex.exec(tiktokUrl)[0];
         return vidId;
-    }
+      }
 
-    function extractUnixTimestamp(vidId) {
+      function extractUnixTimestamp(vidId) {
         // BigInt needed as we need to treat vidId as 64 bit decimal. This reduces browser support.
         const asBinary = BigInt(vidId).toString(2);
         const first31Chars = asBinary.slice(0, 31);
         const timestamp = parseInt(first31Chars, 2);
         return timestamp;
-    }
+      }
 
-    function unixTimestampToHumanDate(timestamp) {
+      function unixTimestampToHumanDate(timestamp) {
         const milliseconds = timestamp * 1000;
         const dateObject = new Date(milliseconds);
-        const humanDateFormat = dateObject.toUTCString() + " (UTC)";
+        const humanDateFormat = dateObject.toUTCString()+" (UTC)";
         return humanDateFormat;
-    }
+      }
 
-    function getDate() {
+      function getDate() {
         const vidId = getVidId();
         const unixTimestamp = extractUnixTimestamp(vidId);
         const humanDateFormat = unixTimestampToHumanDate(unixTimestamp);
         document.querySelector("#date").textContent = humanDateFormat;
-    }
-</script>
+      }
+    </script>
 
-<div class="form">
-    <img src="img/AMC长条黑色透明.png" alt="AMC跨境社区" width=478></img><br>
-    <label for="url">输入TikTok视频链接:</label>
-    <input type="text" id="url" name="url"/>
-    <button onclick="getDate()">获取上传时间</button>
-</div>
-<div class="output">
-    <span id="label">上传日期为: </span>
-    <span id="date"></span>
-</div>
-<br>
-<div>
-    <a href="https://tkstart.com">AMC跨境这区</a> 您的跨境忠实伴侣<br>
-</div>
-<div id="result"></div>
-</body>
+    <div class="form">
+      <img src="img/AMC长条黑色透明.png" alt="AMC跨境社区" width =478></img><br>
+      <label for="url">输入TikTok视频链接:</label>
+      <input type="text" id="url" name="url" />
+      <button onclick="getDate()">获取上传时间</button>
+    </div>
+    <div class="output">
+      <span id="label">上传日期为(北京时间需+8小时): </span>
+      <span id="date"></span>
+    </div><br>
+    <div>
+      <a href="https://tkstart.com">AMC跨境这区</a> 您的跨境忠实伴侣<br>
+      <a href="http://kefuweixin.amcteams.com">点击链接🔗</a> 获得更多帮助<br>
+
+    </div>
+  </body>
 </html>
