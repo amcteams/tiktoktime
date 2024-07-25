@@ -1,33 +1,101 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
   <head>
-    <title>TikTok上传时间查询 FromAMC</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok上传时间查询 FromAMC</title>
     <style>
       body {
-        margin: 1em;
+        margin: 0;
         font-family: "Helvetica", Arial, sans-serif;
-        font-size: 18px;
+        background-color: #f9f9f9;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
       }
-      button, input {
-          font-size: 16px;
+      .container {
+        text-align: center;
+        background: #fff;
+        padding: 2em;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
       .form {
-          margin-bottom: 1em;
+        margin-bottom: 1em;
+      }
+      label, input, button {
+        display: block;
+        width: 100%;
+        margin: 0.5em 0;
+        font-size: 16px;
+      }
+      input {
+        padding: 0.5em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        padding: 0.75em;
+        border: none;
+        border-radius: 4px;
+        background-color: #007BFF;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .output {
+        margin-top: 1em;
+        font-size: 18px;
+      }
+      .links a {
+        color: #007BFF;
+        text-decoration: none;
+        margin: 0.5em 0;
+        display: inline-block;
+      }
+      .links a:hover {
+        text-decoration: underline;
+      }
+      .logo {
+        width: 100%;
+        max-width: 478px;
+        margin-bottom: 1em;
       }
     </style>
   </head>
   <body>
+    <div class="container">
+      <img src="img/AMC长条黑色透明.png" alt="AMC跨境社区" class="logo">
+      <div class="form">
+        <label for="url">输入TikTok视频链接:</label>
+        <input type="text" id="url" name="url" />
+        <button onclick="getDate()">获取上传时间</button>
+      </div>
+      <div class="output">
+        <span id="label">上传日期为(北京时间需+8小时): </span>
+        <span id="date"></span>
+      </div>
+      <div class="links">
+        <a href="https://tkstart.com">AMC跨境社区 您的跨境忠实伴侣</a><br>
+        <a href="http://kefuweixin.amcteams.com">点击链接🔗 获得更多帮助</a>
+      </div>
+    </div>
+
     <script>
       function getVidId() {
-        const tiktokUrl= document.querySelector("#url").value;
-        // This regex should be safe as "Only letters, numbers, underscores, or periods are allowed" in TikTok usernames.
+        const tiktokUrl = document.querySelector("#url").value;
         const regex = /(?<=\/video\/)(.*?)(?=$|[^0-9])/;
         const vidId = regex.exec(tiktokUrl)[0];
         return vidId;
       }
 
       function extractUnixTimestamp(vidId) {
-        // BigInt needed as we need to treat vidId as 64 bit decimal. This reduces browser support.
         const asBinary = BigInt(vidId).toString(2);
         const first31Chars = asBinary.slice(0, 31);
         const timestamp = parseInt(first31Chars, 2);
@@ -37,7 +105,7 @@
       function unixTimestampToHumanDate(timestamp) {
         const milliseconds = timestamp * 1000;
         const dateObject = new Date(milliseconds);
-        const humanDateFormat = dateObject.toUTCString()+" (UTC)";
+        const humanDateFormat = dateObject.toUTCString() + " (UTC)";
         return humanDateFormat;
       }
 
@@ -48,21 +116,5 @@
         document.querySelector("#date").textContent = humanDateFormat;
       }
     </script>
-
-    <div class="form">
-      <img src="img/AMC长条黑色透明.png" alt="AMC跨境社区" width =478></img><br>
-      <label for="url">输入TikTok视频链接:</label>
-      <input type="text" id="url" name="url" />
-      <button onclick="getDate()">获取上传时间</button>
-    </div>
-    <div class="output">
-      <span id="label">上传日期为(北京时间需+8小时): </span>
-      <span id="date"></span>
-    </div><br>
-    <div>
-      <a href="https://tkstart.com">AMC跨境这区</a> 您的跨境忠实伴侣<br>
-      <a href="http://kefuweixin.amcteams.com">点击链接🔗</a> 获得更多帮助<br>
-
-    </div>
   </body>
 </html>
